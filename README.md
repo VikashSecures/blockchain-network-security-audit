@@ -41,17 +41,75 @@ cd blockchain-network-security-audit
 pip install -r requirements.txt
 ```
 
-### 3. Start Ganache (or another local Ethereum node)
+---
 
-### 4. Deploy the Smart Contract
-Use Remix or Truffle to deploy `SmartContracts/smartcontract.sol`. Save the ABI and contract address.
+## ⚙️ 3. Setup Local Ethereum Network with Ganache
 
-### 5. Create the SQLite Database
+1. **Download & Install Ganache**  
+   👉 https://trufflesuite.com/ganache
+
+2. **Start Ganache GUI**  
+   - Create a new workspace or quickstart
+   - Copy the RPC URL (e.g., `http://127.0.0.1:7545`)
+
+3. **Note down:**
+   - One of the account addresses
+   - Its private key
+   - The network RPC URL
+
+---
+
+## 📜 4. Deploy the Smart Contract
+
+### ✅ Option A: Remix IDE (Easiest)
+1. Go to https://remix.ethereum.org
+2. Create a new file `smartcontract.sol` and paste your contract from `SmartContracts/`
+3. Compile the contract
+4. Deploy using "Injected Web3" (connects to Ganache)
+
+### ✅ Option B: Truffle CLI (Advanced)
+1. Install Truffle:
+```bash
+npm install -g truffle
+```
+2. Create a Truffle project and copy `smartcontract.sol` into `contracts/`
+3. Configure `truffle-config.js` with Ganache RPC
+4. Run:
+```bash
+truffle migrate --network development
+```
+
+---
+
+## 🔗 5. Update Python Code
+
+In `read.py` or Flask app, update:
+- Contract Address (from Remix/Truffle)
+- ABI (from `SmartContracts/SmartContract.abi`)
+- RPC URL (`http://127.0.0.1:7545`)
+
+### ✅ Example (Python)
+```python
+from web3 import Web3
+import json
+
+web3 = Web3(Web3.HTTPProvider("http://127.0.0.1:7545"))
+
+contract_address = "0xYourContractAddress"
+with open("SmartContracts/SmartContract.abi", "r") as abi_file:
+    abi = json.load(abi_file)
+
+contract = web3.eth.contract(address=contract_address, abi=abi)
+```
+
+---
+
+## 🧪 6. Create the SQLite Database
 ```bash
 python decoding/createdb.py
 ```
 
-### 6. Start the Flask App
+## 🚀 7. Start the Flask App
 ```bash
 python decoding/app.py
 ```
@@ -63,17 +121,18 @@ python decoding/app.py
 ```
 blockchain-network-security-audit/
 │
-├── intercept.py                  # Script to intercept network events
+├── intercept.py
 ├── decoding/
-│   ├── app.py                    # Flask backend
-│   ├── createdb.py               # DB init script
-│   ├── users.db                  # SQLite DB
-│   ├── static/                   # CSS & JS
-│   └── templates/                # HTML templates
+│   ├── app.py
+│   ├── createdb.py
+│   ├── users.db
+│   ├── static/
+│   └── templates/
 ├── SmartContracts/
-│   ├── smartcontract.sol         # Solidity smart contract
-│   ├── SmartContract.abi         # ABI for interacting with contract
-│   └── SmartContract.bin         # Compiled bytecode
+│   ├── smartcontract.sol
+│   ├── SmartContract.abi
+│   └── SmartContract.bin
+├── requirements.txt
 └── README.md
 ```
 
@@ -87,5 +146,4 @@ blockchain-network-security-audit/
 Client: Dr. Alex Wenjie Ye, VU Melbourne
 
 ---
-
 
